@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Be My Valentine? ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #ffdde1, #ee9ca7);
+    text-align: center;
+    overflow-x: hidden;
+}
+
+.container {
+    padding: 30px;
+}
+
+h1 {
+    color: #fff;
+    font-size: 32px;
+}
+
+.question {
+    margin-top: 40px;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
+
+#yesBtn {
+    background-color: #ff4d88;
+    color: white;
+}
+
+#yesBtn:hover {
+    transform: scale(1.1);
+}
+
+#noBtn {
+    background-color: white;
+    color: #ff4d88;
+    position: absolute;
+}
+
+.message {
+    display: none;
+    margin-top: 40px;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.heart {
+    position: fixed;
+    color: #ff4d88;
+    pointer-events: none;
+    text-shadow: 0 0 10px #ff4d88;
+        animation-name: fallFade;
+        animation-timing-function: linear;
+        animation-iteration-count: 1;
+        will-change: transform, opacity;
+}
+
+@keyframes float {
+    0% { transform: translateY(-100vh); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes fallFade {
+    0% { transform: translateY(-10vh); opacity: 0.9; }
+    60% { opacity: 0.6; }
+    100% { transform: translateY(110vh); opacity: 0; }
+}
+
+/* Envelope */
+.envelope {
+    width: 200px;
+    height: 120px;
+    background: #ff4d88;
+    margin: 30px auto;
+    position: relative;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.envelope:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-top: 60px solid #ff80aa;
+}
+
+.note {
+    display: none;
+    background: linear-gradient(180deg, rgba(255,250,250,0.98), rgba(255,244,247,0.98));
+    padding: 26px 26px 28px 26px;
+    border-radius: 18px;
+    width: 86%;
+    max-width: 520px;
+    margin: 20px auto;
+    box-shadow: 0 10px 30px rgba(6,10,25,0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,200,220,0.6);
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #3b2b2b;
+    line-height: 1.5;
+    position: relative;
+    transform: translateY(-6px);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.note.show {
+    display: block;
+    transform: translateY(0);
+}
+
+.note h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: #931f5b;
+    letter-spacing: 0.4px;
+}
+
+.note p {
+    margin: 6px 0 0 0;
+    font-size: 15px;
+    color: #362b2b;
+}
+
+.note .signature {
+    margin-top: 14px;
+    text-align: right;
+    font-style: italic;
+    color: #7a3b4f;
+}
+
+.closeBtn {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #b33b6a;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.closeBtn:hover { transform: scale(1.06); }
+
+/* Night / Stars */
+.night {
+    background: radial-gradient(ellipse at top, #081226 0%, #021022 60%, #000814 100%);
+    transition: background 0.8s ease;
+}
+
+.stars {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 50;
+}
+
+.star {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff, #ffdcec 60%, transparent 70%);
+    box-shadow: 0 0 8px rgba(255,220,255,0.9);
+    opacity: 0.95;
+    transform: translateY(-10vh);
+    animation: fall linear forwards, twinkle ease-in-out infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10vh) translateX(0) scale(0.6); opacity: 1; }
+    100% { transform: translateY(110vh) translateX(40px) scale(1); opacity: 0; }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.6; filter: blur(0.8px); }
+    50% { opacity: 1; filter: blur(0); }
+}
+
+.note { z-index: 101; }
+.envelope { z-index: 102; }
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 Background Song -->
+<audio id="bgSong" loop>
+    <source src="Vdsong.mpeg" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <h1>Will You Be My Valentine? 💖</h1>
+
+    <div class="question">
+        <button id="yesBtn">Yes 💕</button>
+        <button id="noBtn">No 😅</button>
+    </div>
+
+    <div class="message" id="loveMessage">
+        <h2>Yayyy!! 🎉💖</h2>
+        <p>
+            Thank you for saying YES!  
+            You just made me the happiest person alive.  
+            I promise to always cherish you and make you smile.  
+            Love you so much ❤️
+        </p>
+
+        <div class="envelope" onclick="openNote()"></div>
+
+        <div class="note" id="note">
+            <button class="closeBtn" onclick="closeNote()">×</button>
+            <h3>To the Love of My Life 💌</h3>
+            <p>
+                My dearest,
+                <br>
+                From the first gentle glance to the quiet moments we share, you have filled my days with light and my heart with a peaceful, fierce joy. Every beat whispers your name, and every sunrise feels sweeter because you're in it.
+                <br><br>
+                I promise to hold you close, to laugh with you, and to love you more with each passing day.
+            </p>
+
+            <div class="signature">— Forever yours</div>
+        </div>
+    </div>
+</div>
+
+<script>
+let rainInterval = null;
+
+function startHeartRain(ms) {
+    if (rainInterval) return; // already running
+    rainInterval = setInterval(heartRain, ms);
+}
+
+function stopHeartRain() {
+    if (!rainInterval) return;
+    clearInterval(rainInterval);
+    rainInterval = null;
+}
+
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const message = document.getElementById("loveMessage");
+
+// Stars: container and interval handle
+let starInterval = null;
+let starsContainer = null;
+
+function ensureStarsContainer() {
+    if (!starsContainer) {
+        starsContainer = document.createElement('div');
+        starsContainer.id = 'starsContainer';
+        starsContainer.className = 'stars';
+        document.body.appendChild(starsContainer);
+    }
+}
+
+function starRain() {
+    ensureStarsContainer();
+
+    const star = document.createElement('div');
+    star.className = 'star';
+
+    const left = Math.random() * 100;
+    star.style.left = left + 'vw';
+
+    const size = Math.random() * 4 + 2; // 2-6px
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+
+    const duration = Math.random() * 4 + 4; // 4-8s
+    star.style.animationDuration = duration + 's, ' + (Math.random() * 2 + 1) + 's';
+
+    starsContainer.appendChild(star);
+
+    setTimeout(() => { try { star.remove(); } catch(e){} }, duration * 1000 + 500);
+}
+
+// ❤️ YES BUTTON
+yesBtn.addEventListener("click", () => {
+    message.style.display = "block";
+
+    // Play background music
+    document.getElementById("bgSong").play();
+
+    // Initial heart burst
+    createHearts();
+
+    // Start continuous heart rain (reduced quantity)
+    startHeartRain(500);
+});
+
+// 😅 NO BUTTON RUNS AWAY
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("click", moveNoButton);
+
+function moveNoButton() {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+// 💖 Small Heart Burst
+function createHearts() {
+    for(let i=0;i<12;i++){
+        let heart = document.createElement("div");
+        heart.innerHTML = "❤️";
+        heart.className = "heart";
+        heart.style.left = Math.random()*100 + "vw";
+        heart.style.fontSize = (Math.random()*15+15) + "px";
+        heart.style.opacity = (Math.random()*0.2 + 0.2).toString();
+        heart.style.animationDuration = (Math.random()*2+3) + "s";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),6000);
+    }
+}
+
+// 💌 HEAVY HEART RAIN
+function heartRain() {
+    let heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.className = "heart";
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 30 + 40) + "px";
+    heart.style.opacity = (Math.random() * 0.15 + 0.2).toString();
+    heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 6000);
+}
+
+// 💌 OPEN LETTER + CONTINUOUS HEART RAIN
+function openNote() {
+    document.getElementById("note").style.display = "block";
+
+    // Start continuous heart rain
+    startHeartRain(300);
+
+    // Night vibe: darken background and start falling stars
+    document.body.classList.add('night');
+
+    if (!starInterval) {
+        // soft initial shower of stars
+        for (let i = 0; i < 18; i++) { setTimeout(starRain, i * 120); }
+        starInterval = setInterval(starRain, 220);
+    }
+}
+
+function closeNote() {
+    const note = document.getElementById('note');
+    if (note) note.style.display = 'none';
+
+    // stop star rain
+    if (starInterval) { clearInterval(starInterval); starInterval = null; }
+
+    // remove stars container
+    if (starsContainer) { try { starsContainer.remove(); } catch(e){} starsContainer = null; }
+
+    // remove night class
+    document.body.classList.remove('night');
+
+    // stop additional heart rain if desired
+    stopHeartRain();
+}
+</script>
+
+</body>
+</html>
